@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>canvas</title>
+</head>
+
+<body>
+    <canvas id="tutorial" width="300" height="300"></canvas>
+    <script>
+        //画三角型
+        function drawTriangle() {
+            var canvas = document.getElementById('tutorial');
+            if (!canvas.getContext) return;
+            var ctx = canvas.getContext("2d");
+            // ctx.fillStyle = "rgb(248,48,255)"
+            ctx.beginPath(); //新建一条path
+            ctx.moveTo(50, 50); //把画笔移动到指定的坐标
+            ctx.lineTo(200, 50);  //绘制一条从当前位置到指定坐标(200, 50)的直线.
+            ctx.lineTo(200, 200);
+            //闭合路径。会拉一条从当前点到path起始点的直线。如果当前点与起始点重合，则什么都不做
+            ctx.closePath();
+            ctx.stroke(); // 描边,绘制路径。stroke不会自动closePath()
+            ctx.fill(); //通过填充路径的内容区域生成实心的图形
+        }
+
+        //arc(x, y, r, startAngle, endAngle, anticlockwise): 以(x, y) 为圆心，以r 为半径，从 startAngle 弧度开始到endAngle弧度结束。anticlosewise 是布尔值，true 表示逆时针，false 表示顺时针(默认是顺时针)。
+        function drawArc() {
+            var canvas = document.getElementById('tutorial');
+            if (!canvas.getContext) return;
+            var ctx = canvas.getContext("2d");
+            ctx.beginPath();
+            ctx.arc(50, 50, 40, 0, Math.PI / 2, false);
+            ctx.lineTo(50, 50);
+            ctx.closePath();
+            // ctx.stroke();
+            ctx.fill();
+        }
+
+        function draw() {
+            var canvas = document.getElementById('tutorial');
+            if (!canvas.getContext) return;
+            var ctx = canvas.getContext("2d");
+            ctx.beginPath();
+            ctx.moveTo(50, 50);
+            //参数1、2：控制点1坐标   参数3、4：控制点2坐标  参数4：圆弧半径
+            ctx.arcTo(200, 50, 200, 200, 100);
+            ctx.lineTo(200, 200)
+
+            ctx.setLineDash([20, 5]);  // [实线长度, 间隙长度]
+            ctx.lineDashOffset = -0;//设置虚线起始偏移量。
+
+            ctx.lineWidth = 5;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.rect(50, 50, 10, 10);
+            ctx.rect(200, 50, 10, 10)
+            ctx.rect(200, 200, 10, 10)
+            ctx.fill()
+        }
+        draw();
+    </script>
+</body>
+
+</html>

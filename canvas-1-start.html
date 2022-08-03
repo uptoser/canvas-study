@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>canvas</title>
+</head>
+
+<body>
+    <canvas id="tutorial" width="300" height="300"></canvas>
+    <script>
+        function draw() {
+            var canvas = document.getElementById('tutorial');
+            if (!canvas.getContext) return;
+            var ctx = canvas.getContext("2d");
+            ctx.fillStyle = "rgb(200,0,0)";
+            //绘制矩形
+            ctx.fillRect(10, 10, 55, 50);
+            ctx.strokeRect(10, 70, 100, 50);   // 绘制矩形边框
+            ctx.clearRect(15, 15, 50, 25);//透明
+
+            ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+            ctx.fillRect(30, 30, 55, 50);
+        }
+        draw();
+    </script>
+</body>
+
+</html>

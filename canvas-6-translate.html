@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <canvas id="tutorial" width="480" height="320"></canvas>
+    <script>
+        var ctx;
+        function draw() {
+            var canvas = document.getElementById('tutorial');
+            var ctx = canvas.getContext("2d");
+            ctx.fillRect(0, 0, 100, 100)
+            ctx.save(); //保存坐原点平移之前的状态
+            ctx.translate(100, 100);//平移
+            ctx.strokeRect(0, 0, 100, 100)
+            ctx.restore(); //恢复到最初状态
+            ctx.translate(200, 200);
+            ctx.fillRect(0, 0, 100, 100)
+        }
+        draw();
+    </script>
+</body>
+
+</html>

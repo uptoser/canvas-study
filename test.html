@@ -58,7 +58,6 @@
             if (!canvas.getContext) return;
             ctx = canvas.getContext("2d");
 
-
             //定义开始和结束的弧度
             let startRadian = firstRadian;
             let endRadian = firstRadian;
@@ -77,7 +76,6 @@
                 temp += n
 
                 //定义要走的弧度
-                // const radian = 2 * Math.PI * obj.percent / 100
                 const radian = 2 * Math.PI * n
                 endRadian = startRadian + radian;
 
@@ -90,30 +88,7 @@
                 //获取线的最终点坐标
                 const line = getNewXY(chartRadius + lineLength, startRadian + radian / 2, ...newCenterXY)
 
-
-
-                //根据弧中心点坐标和圆中心点坐标求出偏移的直线方程  (y-d)/(b-d)-(x-c)/(a-c)=0
-                // function fy(x, radian) {
-                //     if (radian == Math.PI || radian == 2 * Math.PI) {
-                //         return chartCenter[1]
-                //     }
-                //     console.log((x - newCenterXY[0]));
-                //     console.log((chartCenter[1] - newCenterXY[1]));
-                //     console.log((chartCenter[0] - newCenterXY[0]));
-                //     console.log(newCenterXY[1]);
-                //     return (x - newCenterXY[0]) * (chartCenter[1] - newCenterXY[1]) / (chartCenter[0] - newCenterXY[0]) + newCenterXY[1]
-                // }
-                //定义偏移后的x坐标
-                // let x, y;
-                // if (endRadian == Math.PI / 2 || 3 * Math.PI / 2 == endRadian) {
-                //     x = chartCenter[0];
-                // } else {
-                // x = newCenterXY[0] > chartCenter[0] ? chartCenter[0] + xplus : chartCenter[0] - xplus
-                // }
-                // y = fy(x)
-
                 const newChartCenter = newCenterXY;
-                // ctx.fillRect(...newCenterXY, 10, 10);
 
                 //画弧形
                 ctx.beginPath();
@@ -129,6 +104,7 @@
                 ctx.beginPath();
                 ctx.moveTo(...centerRadian);
                 ctx.lineTo(...line)
+                ctx.closePath();
                 ctx.strokeStyle = colorArray[index]
                 ctx.stroke();
 
@@ -161,7 +137,7 @@
             //画内部圆
             ctx.beginPath();
             //定义要走的弧度
-            ctx.arc(...chartCenter, insiderRadius, firstRadian, 2 * Math.PI + firstRadian);
+            ctx.arc(...chartCenter, insiderRadius + offset, firstRadian, 2 * Math.PI + firstRadian);
             ctx.closePath();
             ctx.fillStyle = "#ffffff"
             ctx.fill();

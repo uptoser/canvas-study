@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="c1" width="500" height="300"></canvas>
+    <script>
+        var ctx;
+        const canvas = document.getElementById('c1');
+        //获取画布的宽和高
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        //定义起始角度为90度
+        const firstRadian = Math.PI / 2;
+        //定义圆中心点
+        const chartCenter = [canvasWidth / 2, canvasHeight / 2];
+        //定义图表圆的半径
+        const chartRadius = Math.max(canvasWidth, canvasHeight) / 6;
+        //定义线的长度和宽度
+        const lineLength = chartRadius * 3 / 5
+        const lineWidth = 2
+        //定义内部圆半径
+        const insiderRadius = chartRadius / 2
+        //定义x坐标偏移量
+        const offset = 2
+        //定义颜色池
+        const colorArray = ["#84AFFD", "#FFD078", "#A48EFD", "#ffc4b6", "#71fd8d", "#fffc0a"]
+        //定义数据
+        const data = [
+            {
+                name: "基本工资基本工资基本工资基本工资",
+                value: 5000
+            },
+            {
+                name: "业绩提成",
+                value: 1500
+            },
+            {
+                name: "岗位补贴",
+                value: 2000
+            },
+            {
+                name: "不知道",
+                value: 2000
+            },
+            {
+                name: "这是啥这是啥这是啥这是啥这是啥",
+                value: 4000
+            }
+        ]
+        function draw() {
+            if (!canvas.getContext) return;
+            ctx = canvas.getContext("2d");
+
+
+            //定义开始和结束的弧度
+            let startRadian = firstRadian;
+            let endRadian = firstRadian;
+
+            //求总和
+            let sum = data.map(obj => obj.value).reduce((x, y) => x + y, 0)
+
+            let temp = 0
+            for (let index = 0; index < data.length; index++) {
+                const obj = data[index];
+
+                let n = Math.round(obj.value * 100 / sum) / 100
+                if (index == data.length - 1) {
+                    n = Math.round((1 - temp) * 100) / 100
+                }
+                temp += n
+
+                //定义要走的弧度
+                // const radian = 2 * Math.PI * obj.percent / 100
+                const radian = 2 * Math.PI * n
+                endRadian = startRadian + radian;
+
+                //获取偏移后圆中心点坐标
+                const newCenterXY = getNewXY(offset, startRadian + radian / 2, ...chartCenter)
+
+                //获取弧线中间点坐标
+                const centerRadian = getNewXY(chartRadius, startRadian + radian / 2, ...newCenterXY)
+
+                //获取线的最终点坐标
+                const line = getNewXY(chartRadius + lineLength, startRadian + radian / 2, ...newCenterXY)
+
+
+
+                //根据弧中心点坐标和圆中心点坐标求出偏移的直线方程  (y-d)/(b-d)-(x-c)/(a-c)=0
+                // function fy(x, radian) {
+                //     if (radian == Math.PI || radian == 2 * Math.PI) {
+                //         return chartCenter[1]
+                //     }
+                //     console.log((x - newCenterXY[0]));
+                //     console.log((chartCenter[1] - newCenterXY[1]));
+                //     console.log((chartCenter[0] - newCenterXY[0]));
+                //     console.log(newCenterXY[1]);
+                //     return (x - newCenterXY[0]) * (chartCenter[1] - newCenterXY[1]) / (chartCenter[0] - newCenterXY[0]) + newCenterXY[1]
+                // }
+                //定义偏移后的x坐标
+                // let x, y;
+                // if (endRadian == Math.PI / 2 || 3 * Math.PI / 2 == endRadian) {
+                //     x = chartCenter[0];
+                // } else {
+                // x = newCenterXY[0] > chartCenter[0] ? chartCenter[0] + xplus : chartCenter[0] - xplus
+                // }
+                // y = fy(x)
+
+                const newChartCenter = newCenterXY;
+                // ctx.fillRect(...newCenterXY, 10, 10);
+
+                //画弧形
+                ctx.beginPath();
+                ctx.arc(...newChartCenter, chartRadius, startRadian, endRadian);
+                ctx.lineTo(...newChartCenter);
+                ctx.closePath();
+                startRadian = endRadian
+                ctx.fillStyle = colorArray[index]
+                ctx.fill();
+
+                //画线
+                ctx.lineWidth = lineWidth;
+                ctx.beginPath();
+                ctx.moveTo(...centerRadian);
+                ctx.lineTo(...line)
+                ctx.strokeStyle = colorArray[index]
+                ctx.stroke();
+
+                // TODO 画文字 该地方不是动态 有点懒了
+                const [x, y] = line
+                ctx.font = "16px sans-serif"
+
+                let value = obj.value
+                let name = obj.name
+
+                ctx.textAlign = "start";
+                //当文字在中间时
+                if (x == chartCenter[0]) {
+                    console.log("这个地方还没做处理哈");
+                    continue
+                }
+                //当文字在左边时
+                if (x < chartCenter[0]) {
+                    ctx.textAlign = "end";
+                    ctx.fillText(value + "+/月", x - 5, y + 18);
+                    // ctx.fillStyle = "black"
+                    ctx.fillText(name, x - 5, y - 2);
+                    continue
+                }
+                ctx.fillText(value + "+/月", x + 5, y + 18);
+                // ctx.fillStyle = "black"
+                ctx.fillText(name, x + 5, y - 2);
+
+            }
+            //画内部圆
+            ctx.beginPath();
+            //定义要走的弧度
+            ctx.arc(...chartCenter, insiderRadius, firstRadian, 2 * Math.PI + firstRadian);
+            ctx.closePath();
+            ctx.fillStyle = "#ffffff"
+            ctx.fill();
+
+        }
+        /**
+         * 获取圆上的点的坐标
+         * @param redius 半径
+         * @param radian 弧度
+         */
+        function getNewXY(radius, radian, x = 0, y = 0) {
+            x = x + radius * Math.cos(radian);
+            y = y + radius * Math.sin(radian);
+            return [x, y]
+        }
+
+        //反转字符串
+        function reverseString(str) {
+            var splitString = str.split("");
+            var reverseArray = splitString.reverse();
+            var joinArray = reverseArray.join("");
+            return joinArray;
+        }
+
+        draw();
+    </script>
+</body>
+
+</html>

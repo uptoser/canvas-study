@@ -9,10 +9,14 @@
 </head>
 
 <body>
-    <canvas id="c1" width="500" height="300"></canvas>
+    <canvas id="c1" width="1000" height="1000"></canvas>
     <script>
         var ctx;
         const canvas = document.getElementById('c1');
+        //获取客户端的宽
+        // const clientWidth = document.body.clientWidth;
+        //获取rem比例
+        // const px = clientWidth * 20 / 375;
         //获取画布的宽和高
         const canvasWidth = canvas.width;
         const canvasHeight = canvas.height;
@@ -29,6 +33,9 @@
         const insiderRadius = chartRadius / 2
         //定义x坐标偏移量
         const offset = 2
+        //定义文本大小的字体
+        const fontFamily = "sans-serif"
+        const fontSize = Math.max(canvasWidth, canvasHeight) / 31.25
         //定义颜色池
         const colorArray = ["#84AFFD", "#FFD078", "#A48EFD", "#ffc4b6", "#71fd8d", "#fffc0a"]
         //定义数据
@@ -110,7 +117,8 @@
 
                 // TODO 画文字 该地方不是动态 有点懒了
                 const [x, y] = line
-                ctx.font = "16px sans-serif"
+                ctx.font = fontSize + "px " + fontFamily
+                console.log(fontSize + "px " + fontFamily);
 
                 let value = obj.value
                 let name = obj.name
@@ -124,14 +132,14 @@
                 //当文字在左边时
                 if (x < chartCenter[0]) {
                     ctx.textAlign = "end";
-                    ctx.fillText(value + "+/月", x - 5, y + 18);
+                    ctx.fillText(value + "+/月", x - fontSize / 5, y + fontSize + fontSize / 9);
                     // ctx.fillStyle = "black"
-                    ctx.fillText(name, x - 5, y - 2);
+                    ctx.fillText(name, x - fontSize / 5, y - fontSize / 9);
                     continue
                 }
-                ctx.fillText(value + "+/月", x + 5, y + 18);
+                ctx.fillText(value + "+/月", x + fontSize / 5, y + fontSize + 2);
                 // ctx.fillStyle = "black"
-                ctx.fillText(name, x + 5, y - 2);
+                ctx.fillText(name, x + fontSize / 5, y - fontSize / 9);
 
             }
             //画内部圆
